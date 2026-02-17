@@ -1,0 +1,24 @@
+# === Roku / BrightScript (No subir paquetes firmados) ===
+*.pkg
+*.zip
+out/
+.roku-deploy-config
+
+# === Seguridad y Secretos (CRÍTICO) ===
+.env
+.env.*
+secrets.json
+*.key
+*.pem
+.supabase/
+infpriva.txt
+inf.env
+
+# === Python / Backend ===
+__pycache__/
+*.py[cod]
+venv/
+
+# === Logs y Temporales ===
+*.log
+npm-debug.log*

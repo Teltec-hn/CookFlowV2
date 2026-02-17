@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: cookflow_api
+    # Usamos bridge, pero "engañamos" al contenedor para que api.cookflow.local
+    # apunte a la IP de tu Windows Host (inyectada por el script setup_network.ps1)
+    network_mode: bridge
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "api.cookflow.local:${WINDOWS_HOST_IP}"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+
+  # (Opcional) Base de datos local para desarrollo offline
+  # db:
+  #   image: postgres:15
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: cookflow_local

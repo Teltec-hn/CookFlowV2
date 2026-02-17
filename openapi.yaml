@@ -1,0 +1,165 @@
+openapi: 3.0.0
+info:
+  title: CookFlow API
+  description: The Golden Contract for CookFlow V2. Source of truth for Roku and Android TV clients.
+  version: 1.0.0
+servers:
+  - url: https://api.cookflow.com/v1
+    description: Production Server
+  - url: http://localhost:8000/v1
+    description: Local Development
+
+paths:
+  /chefs:
+    get:
+      summary: List all chefs
+      operationId: listChefs
+      responses:
+        '200':
+          description: A detailed list of chefs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChefProfile'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+
+  /chefs/{chefId}:
+    get:
+      summary: Get details of a specific chef
+      operationId: getChefById
+      parameters:
+        - name: chefId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chef details found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ChefProfile'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '404':
+          description: Chef not found
+
+  /recipes:
+    get:
+      summary: List recipes
+      parameters:
+        - name: chefId
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: List of recipes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recipe'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+
+components:
+  schemas:
+    Meta:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        version:
+          type: string
+          example: "1.0.0"
+        source:
+          type: string
+          enum: [ "live", "cache", "fallback" ]
+
+    ChefProfile:
+      type: object
+      required: [id, name, voice_style, specialties_csv]
+      properties:
+        id:
+          type: string
+          example: "rapper_001"
+        name:
+          type: string
+          example: "Snoop Dogg"
+        bio:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        voice_style:
+          type: string
+          enum: [ "snoop", "gordon", "julia", "standard" ]
+        specialties_csv:
+          type: string
+          description: "Comma-separated string for Roku compatibility"
+          example: "soul food,baking,gin"
+        specialties:
+          type: array
+          items:
+            type: string
+          description: "Array formats for Android/Web"
+        is_premium:
+          type: boolean
+
+    Recipe:
+      type: object
+      required: [id, title, ingredients_csv]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        image_url:
+          type: string
+        ingredients_csv:
+          type: string
+          description: "Simple list for list views"
+        ingredients:
+          type: array
+          items:
+            type: object
+            properties:
+              name: 
+                type: string
+              amount:
+                type: number
+              unit:
+                type: string
+        steps:
+          type: array
+          items:
+            type: object
+            properties:
+              order:
+                type: integer
+              text:
+                type: string
