@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="StandardGridItem" extends="Group">
+  <script type="text/brightscript" uri="pkg:/components/StandardGridItem.brs" />
+
+  <children>
+    <Poster 
+      id="poster" 
+      width="320" 
+      height="180" 
+      loadDisplayMode="scaleToFill" 
+    />
+    <Label 
+      id="title" 
+      width="320" 
+      height="60" 
+      translation="[0, 190]" 
+      font="font:SmallSystemFont" 
+      horizAlign="center" 
+    />
+  </children>
+</component>

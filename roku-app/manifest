@@ -1,0 +1,24 @@
+title=CookFlow V2.1 - Chef DNA
+major_version=2
+minor_version=1
+build_version=0
+
+# === NETWORK CONFIG (V2.1 Strategy) ===
+# Esta IP la inyectará automáticamente tu setup_network.ps1
+api_dev_ip=172.19.13.107 
+# URL de producción de tu futura Edge Function
+api_prod_url=https://hcfhvgkucaimchfxbtub.supabase.co/functions/v1/cookflow-proxy
+
+# === UI CONFIG ===
+mm_icon_focus_hd=pkg:/images/main_icon.png
+splash_screen_hd=pkg:/images/splash.png
+
+# --- Smart Connectivity (Security Focused) ---
+# Estas variables son leídas por ConfigManager.brs
+# api_dev_ip=172.19.13.107 (redundante pero mantenido por si setup_network lo requiere)
+
+# --- App Capabilities ---
+bs_const=debug=true
+supports_input_launch=1
+supports_audio_guide=1
+bs_libs_required=roku_ads_lib

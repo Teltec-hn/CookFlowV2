@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="MainScene" extends="Scene">
+  <script type="text/brightscript" uri="pkg:/components/MainScene.brs" />
+
+  <interface>
+    <function name="loadData" />
+  </interface>
+
+  <children>
+    <Rectangle 
+      id="bgRect" 
+      color="0x020617FF" 
+      width="1920" 
+      height="1080" 
+      translation="[0,0]" 
+    />
+
+    <Label 
+      text="CookFlow TV" 
+      translation="[100, 60]" 
+      font="font:LargeBoldSystemFont" 
+      color="0xFFFFFFFF" 
+    />
+    
+    <Label 
+      id="statusLabel"
+      text="Esperando datos del Kernel..." 
+      translation="[100, 120]" 
+      font="font:SmallSystemFont" 
+      color="0x94A3B8FF" 
+    />
+
+    <RowList 
+      id="recipeList" 
+      translation="[100, 200]" 
+      itemComponentName="StandardGridItem" 
+      numRows="1" 
+      rowItemSize="[[320, 260]]" 
+      rowItemSpacing="[[30, 0]]" 
+      itemSize="[1920, 300]" 
+      focusXOffset="[0]" 
+      visible="false"
+    />
+  </children>
+</component>
