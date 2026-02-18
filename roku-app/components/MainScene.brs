@@ -1,62 +1,56 @@
 sub init()
+    m.mainUI = m.top.findNode("mainUI")
+    m.welcomeLayer = m.top.findNode("welcomeLayer")
+    m.welcomeImage = m.top.findNode("welcomeImage")
     m.recipeList = m.top.findNode("recipeList")
-    m.statusLabel = m.top.findNode("statusLabel")
+    
+    ' 1. Configurar el Timer para el Fade Manual
+    m.fadeTimer = m.top.findNode("fadeTimer")
+    m.fadeTimer.observeField("fire", "onFadeTick")
+    m.fadeTimer.control = "start"
+    
+    print "VP LOG: [UI] Iniciando Fade Manual..."
 
-    ' 1. Crear el Task
+    ' 2. Carga de datos (Supabase)
     m.loadTask = CreateObject("roSGNode", "RecipeTask")
     m.loadTask.apiUrl = "https://hcfhvgkucaimchfxbtub.supabase.co/functions/v1"
-    
-    ' 2. Observar la respuesta
     m.loadTask.observeField("response", "onDataArrived")
-    
-    ' 3. Ejecutar
     m.loadTask.control = "RUN"
-    m.statusLabel.text = "Sincronizando con CookFlow Cloud..."
+end sub
+
+' Esta función se ejecuta 20 veces por segundo
+sub onFadeTick()
+    currentOpacity = m.welcomeImage.opacity
+    
+    if currentOpacity < 1.0
+        ' Aumentamos la opacidad gradualmente
+        m.welcomeImage.opacity = currentOpacity + 0.05
+    else
+        ' Cuando llega a 1 (totalmente visible), paramos y esperamos un poco
+        m.fadeTimer.control = "stop"
+        ' Damos 1.5 segundos de gloria al logo y luego entramos al menú
+        print "VP LOG: [UI] Intro completa. Saltando al menú."
+        m.welcomeLayer.visible = false
+        m.mainUI.visible = true
+        m.recipeList.setFocus(true)
+    end if
 end sub
 
 sub onDataArrived()
-    print "VP LOG: [UI] El Task ha terminado. Procesando JSON..."
     jsonString = m.loadTask.response
-    
-    if jsonString = "" or jsonString = invalid
-        m.statusLabel.text = "Error: Respuesta vacía de la nube."
-        return
-    end if
-
-    data = ParseJson(jsonString)
-
-    if data <> invalid and type(data) = "roArray"
-        print "VP LOG: [UI] JSON válido. Recetas encontradas: " + data.Count().ToStr()
-        renderRecipes(data)
-    else
-        print "VP LOG: [ERROR] El JSON no es un array válido o está corrupto."
-        m.statusLabel.text = "Error: Formato de datos no compatible."
+    if jsonString <> "" and jsonString <> invalid
+        data = ParseJson(jsonString)
+        if data <> invalid then renderRecipes(data)
     end if
 end sub
 
 sub renderRecipes(data as Object)
-    ' Limpiamos cualquier rastro anterior
-    m.recipeList.content = invalid
-
-    ' Construimos el árbol de contenido (ContentNode)
     root = CreateObject("roSGNode", "ContentNode")
     row = root.CreateChild("ContentNode")
-    row.title = "Pastas de la Casa"
-
     for each item in data
-        ' Creamos un nodo por cada plato
         node = row.CreateChild("ContentNode")
         node.title = item.title
-        node.hdPosterUrl = item.image ' Esta URL viene de Spoonacular
-        node.description = item.summary
-        print "VP LOG: [UI] Preparando tarjeta para: " + item.title
+        node.hdPosterUrl = item.image
     end for
-
-    ' INYECCIÓN FINAL
     m.recipeList.content = root
-    m.recipeList.visible = true
-    m.recipeList.setFocus(true)
-    
-    m.statusLabel.text = "CookFlow V2.1 - Menú Actualizado"
-    print "VP LOG: [UI] ¡Renderizado completo!"
-end sub 
+end sub

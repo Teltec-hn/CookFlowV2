@@ -10,8 +10,9 @@ api_dev_ip=172.19.13.107
 api_prod_url=https://hcfhvgkucaimchfxbtub.supabase.co/functions/v1/cookflow-proxy
 
 # === UI CONFIG ===
-mm_icon_focus_hd=pkg:/images/main_icon.png
-splash_screen_hd=pkg:/images/splash.png
+mm_icon_focus_hd=pkg:/images/icon_hd.png
+mm_icon_focus_fhd=pkg:/images/icon_fhd.png
+splash_screen_fhd=pkg:/images/logo.jpg
 
 # --- Smart Connectivity (Security Focused) ---
 # Estas variables son leídas por ConfigManager.brs

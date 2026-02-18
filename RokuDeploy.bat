@@ -1,0 +1,3 @@
+echo [2/3] Enviando a Roku (con timeout extendido)...
+:: Añadimos --connect-timeout para que no aborte tan rapido
+curl --connect-timeout 10 --user %AUTH% --digest -S -F "mysubmit=Install" -F "archive=@%ZIP_NAME%" -F "passwd=" http://%ROKU_IP%/plugin_install > resultado.html
