@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="StandardGridItem" extends="Group">
+  <interface>
+    <field id="itemContent" type="node" onChange="showContent" />
+  </interface>
+
   <script type="text/brightscript" uri="pkg:/components/StandardGridItem.brs" />
 
   <children>
-    <Poster 
-      id="poster" 
-      width="320" 
-      height="180" 
-      loadDisplayMode="scaleToFill" 
-    />
-    <Label 
-      id="title" 
-      width="320" 
-      height="60" 
-      translation="[0, 190]" 
-      font="font:SmallSystemFont" 
-      horizAlign="center" 
-    />
+    <Rectangle width="320" height="260" color="0x1E293BFF" /> 
+    <Poster id="poster" width="320" height="180" loadDisplayMode="scaleToFill" />
+    <Label id="title" width="300" height="60" translation="[10, 190]" font="font:SmallSystemFont" horizAlign="center" color="0xFFFFFFFF" />
   </children>
 </component>
