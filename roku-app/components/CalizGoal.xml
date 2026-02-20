@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="CalizGoal" extends="Group">
+  <interface>
+    <field id="progress" type="float" value="0.0" onChange="onProgressChanged" /> <!-- 0.0 to 1.0 -->
+    <field id="targetText" type="string" alias="targetLabel.text" />
+    <field id="currentText" type="string" alias="currentLabel.text" />
+  </interface>
+  <script type="text/brightscript" uri="pkg:/components/CalizGoal.brs" />
+  <children>
+    <!-- Background Ring (Empty) -->
+    <Poster 
+      id="bgRing" 
+      uri="pkg:/images/caliz_bg.png" 
+      width="150" 
+      height="150" 
+      translation="[0,0]" 
+    />
+    
+    <!-- Fill Mask (The Gold Liquid) -->
+    <!-- We simulate a radial fill by masking or scaling a rectangle inside a group -->
+    <!-- Roku SceneGraph specific technique: Using a Poster as a mask isn't straightforward for radial. 
+         For simplicity in V1: We will use a vertical fill (bottom-up) which looks like a cup filling. -->
+    <Group id="fillGroup" translation="[0,0]">
+        <!-- The Gold Texture -->
+        <Poster 
+          id="fillTexture" 
+          uri="pkg:/images/caliz_fill.png" 
+          width="150" 
+          height="150" 
+          translation="[0, 150]" 
+        />
+    </Group>
+
+    <!-- Overlay (The Glass Reflection/Shine) -->
+    <Poster 
+      id="overlay" 
+      uri="pkg:/images/caliz_overlay.png" 
+      width="150" 
+      height="150" 
+      opacity="0.5"
+    />
+
+    <!-- Text Info -->
+    <Label 
+      id="targetLabel" 
+      width="150" 
+      translation="[0, 160]" 
+      horizAlign="center" 
+      font="font:SmallSystemFont" 
+      color="#F1C40F" 
+    />
+     <Label 
+      id="currentLabel" 
+      width="150" 
+      translation="[0, 180]" 
+      horizAlign="center" 
+      font="font:SmallBoldSystemFont" 
+      color="#FFFFFF" 
+    />
+  </children>
+</component>

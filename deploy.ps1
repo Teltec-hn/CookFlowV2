@@ -2,13 +2,13 @@
 # Usage: ./deploy.ps1 -Ip "172.19.13.118" -Password "RB86"
 
 param (
-    [string]$Ip = "172.19.13.118",
+    [string]$Ip = "10.130.43.118",
     [string]$User = "rokudev",
-    [string]$Password = "RB86"
+    [SecureString]$Password = (ConvertTo-SecureString "RB86" -AsPlainText -Force)
 )
 
 $ErrorActionPreference = "Stop"
-$SourceDir = "$PSScriptRoot\cookflow_roku"
+$SourceDir = "$PSScriptRoot\roku-app"
 $ZipFile = "$PSScriptRoot\out\cookflow_app.zip"
 $OutDir = "$PSScriptRoot\out"
 
@@ -21,11 +21,29 @@ if (Test-Path $OutDir) { Remove-Item $OutDir -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
 # 2. Zip Application
-Write-Host "[ACTION] Zipping source directory..." -ForegroundColor Yellow
-# Compress-Archive requires the *contents* of the folder, not the folder itself
-Compress-Archive -Path "$SourceDir\*" -DestinationPath $ZipFile -Force
+Write-Host "[ACTION] Zipping source directory (Explicit Items)..." -ForegroundColor Yellow
+Push-Location -Path $SourceDir
+try {
+    # Explicitly select the items we want at the root of the zip
+    # This prevents accidental inclusion of parent folders or hidden files
+    # Compress all items in the current directory to the destination zip
+    Get-ChildItem -Path . | Compress-Archive -DestinationPath $ZipFile -Force
+}
+finally {
+    Pop-Location
+}
 
-# 3. Deploy to Roku
+# 3. Verify Zip Structure (Debug)
+Write-Host "[DEBUG] Verifying zip structure..." -ForegroundColor Magenta
+$VerifyDir = "$OutDir\verify_zip"
+Expand-Archive -Path $ZipFile -DestinationPath $VerifyDir -Force
+Get-ChildItem -Path $VerifyDir -Recurse | Select-Object FullName
+if (-not (Test-Path "$VerifyDir\source\Theme.brs")) {
+    Write-Host "[ERROR] SOURCE FOLDER MISSING IN ZIP!" -ForegroundColor Red
+    # exit 1 
+}
+
+# 4. Deploy to Roku
 Write-Host "[ACTION] Uploading to Roku ($Ip)..." -ForegroundColor Yellow
 $BaseUrl = "http://$Ip"
 
@@ -39,7 +57,10 @@ if (-not (Test-Connection -ComputerName $Ip -Count 1 -Quiet)) {
 # Roku installer expects the file form field to be named 'archive'
 # and the action to be 'Replace' (install)
 $UploadUrl = "$BaseUrl/plugin_install"
-$Auth = "$($User):$($Password)"
+# Decode SecureString for curl
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password)
+$PlainPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+$Auth = "$($User):$($PlainPassword)"
 
 # We use curl.exe directly because Invoke-RestMethod with multipart/form-data is verbose in older PS versions
 try {

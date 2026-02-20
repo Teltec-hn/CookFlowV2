@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="GamificationBadges" extends="Group">
+  <interface>
+    <field id="rank" type="string" onChange="OnRankChanged" /> 
+    <field id="awards" type="array" onChange="OnAwardsChanged" />
+  </interface>
+  <script type="text/brightscript" uri="pkg:/components/GamificationBadges.brs" />
+  <children>
+    <LayoutGroup layoutDirection="horiz" itemSpacings="[10]">
+        <!-- Main Rank -->
+        <Poster id="rankPoster" width="64" height="64" uri="pkg:/images/plomo_rank.png" />
+        
+        <!-- Divider -->
+        <Rectangle width="2" height="60" color="#FFFFFF" opacity="0.3" />
+
+        <!-- Awards (Pre-created slots) -->
+        <LayoutGroup id="awardsGroup" layoutDirection="horiz" itemSpacings="[5]">
+            <Poster width="48" height="48" uri="pkg:/images/god_halo.png" visible="false" />
+            <Poster width="48" height="48" uri="pkg:/images/god_halo.png" visible="false" />
+            <Poster width="48" height="48" uri="pkg:/images/god_halo.png" visible="false" />
+        </LayoutGroup>
+    </LayoutGroup>
+  </children>
+</component>

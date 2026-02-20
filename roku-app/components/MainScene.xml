@@ -1,35 +1,47 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="MainScene" extends="Scene">
   <script type="text/brightscript" uri="pkg:/components/MainScene.brs" />
+  <script type="text/brightscript" uri="pkg:/source/Theme.brs" />
 
   <children>
-    <Rectangle width="1280" height="720" color="0x020617FF" />
+    <!-- Tasks -->
+    <CountryTask id="countryTask" />
+    <RecipeTask id="recipeTask" />
+    <ChefProfileTask id="chefTask" />
+    
+    <!-- Background -->
+    <Rectangle id="mainBackground" width="1920" height="1080" color="#101010" />
 
-    <Group id="welcomeLayer">
-      <Poster 
-        id="welcomeImage" 
-        uri="pkg:/images/logo.jpg" 
-        width="1280" 
-        height="720" 
-        loadDisplayMode="scaleToFit"
-        opacity="0.0" 
-      />
-      <Label 
-        text="Cocinando el menú con IA..." 
-        translation="[0, 620]" 
-        width="1280" 
-        horizAlign="center" 
-        font="font:SmallSystemFont" 
-        color="0x94A3B8FF" 
-      />
-    </Group>
-
-    <Timer id="fadeTimer" duration="0.05" repeat="true" />
-
+    <!-- UI Container -->
     <Group id="mainUI" visible="false">
-      <Poster uri="pkg:/images/logo.jpg" translation="[60, 30]" width="100" height="100" />
-      <Label text="COOKFLOW TV" translation="[180, 60]" font="font:LargeBoldSystemFont" />
-      <RowList id="recipeList" translation="[60, 220]" itemComponentName="StandardGridItem" numRows="1" itemSize="[1280, 300]" rowItemSize="[[280, 220]]" rowItemSpacing="[[20, 0]]" />
+        
+        <!-- Header / Top Bar -->
+        <Label text="CookFlow TV" translation="[100, 50]" font="font:LargeBoldSystemFont" color="#E67E22" />
+        
+        <!-- Gamification Badges (Top Right) -->
+        <GamificationBadges id="gamificationBadges" translation="[1400, 50]" />
+
+        <!-- Main Content Area -->
+        <RowList 
+            id="recipeList" 
+            translation="[100, 200]" 
+            itemSize="[1920, 600]" 
+            numRows="2" 
+            itemSpacing="[20, 0]" 
+            rowItemSize="[[320, 240]]" 
+            rowItemSpacing="[[20, 0]]"
+            showRowLabel="true"
+            rowLabelColor="#F5E6CA"
+        />
+        
+        <!-- The Cáliz (Bottom Left or Sidebar) -->
+        <CalizGoal id="calizGoal" translation="[100, 800]" />
+
+        <!-- Agent Chat (Bottom Right) -->
+        <AgentChat id="agentChat" translation="[1200, 600]" />
     </Group>
+
+    <!-- Intro Animation Overlay -->
+    <IntroScene id="introScene" />
   </children>
 </component>

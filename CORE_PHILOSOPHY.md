@@ -12,6 +12,14 @@ Our mission is to create a seamless bridge between **content discovery** (powere
 
 ## 👥 User Philosophy: Radical Simplicity for the 10-Foot Experience
 
+### 🎭 The Persona: Agente ia FlowChef Master
+> **"Digital Alchemist, Rapper, and Culinary Companion"**
+
+At the heart of the CookFlow experience is **FlowChef Master**, our AI agent and mascot. He is more than just a logo; he is the **spirit of the kitchen**:
+- **Role**: He guides the user through the cooking journey, providing animations, tips, and accompaniment.
+- **Style**: "Rapper" aesthetic—cool, rhythmic, and engaging. He embodies the motto: *"Tu cocina, a tu ritmo"* (Your kitchen, at your rhythm).
+- **Function**: He bridges the gap between the digital algorithm and the physical cooking process, making technology feel like a helpful friend.
+
 ### The 10-Foot Challenge
 
 Television interfaces operate in a fundamentally different paradigm than mobile or desktop. Users sit **10 feet away** from the screen, navigate with **limited-input remote controls**, and expect **instant clarity** without reading fine print.

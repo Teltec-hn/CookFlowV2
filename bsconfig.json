@@ -1,0 +1,10 @@
+{
+    "rootDir": "roku-app",
+    "host": "10.130.43.118",
+    "password": "RB86",
+    "retainStagingFolder": true,
+    "diagnosticFilters": [
+        "1001",
+        "1128"
+    ]
+}

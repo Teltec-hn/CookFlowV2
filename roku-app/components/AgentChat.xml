@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="AgentChat" extends="Group">
+  <script type="text/brightscript" uri="pkg:/components/AgentChat.brs" />
+
+  <interface>
+    <!-- Public fields to control the agent -->
+    <field id="text" type="string" onChange="onTextChanged" />
+    <field id="isSpeaking" type="bool" value="false" onChange="onSpeakingChanged" />
+    <field id="sendMessage" type="string" onChange="onSendMessage" /> <!-- Trigger to send msg -->
+    <field id="isGodMode" type="bool" value="false" onChange="onGodModeChanged" />
+  </interface>
+
+  <children>
+    <!-- Main Container -->
+    <Group id="chatContainer" opacity="0">
+      
+      <!-- The Avatar (FlowChef Master) -->
+      <!-- Situated bottom-left relative to the component's position -->
+      <!-- God Mode Halo (Hidden by default) -->
+       <Poster 
+        id="godHalo" 
+        uri="pkg:/images/god_halo.png" 
+        width="140" 
+        height="140" 
+        translation="[-20, 30]" 
+        opacity="0.0" 
+      />
+
+      <!-- The Avatar (FlowChef Master) -->
+      <!-- Situated bottom-left relative to the component's position -->
+      <Poster 
+        id="avatar" 
+        uri="pkg:/images/logo.jpg" 
+        width="100" 
+        height="100" 
+        translation="[0, 50]" 
+        loadDisplayMode="scaleToFit" 
+      />
+
+      <!-- The Chat Bubble -->
+      <Rectangle 
+        id="bubbleBg" 
+        width="800" 
+        height="120" 
+        translation="[110, 40]" 
+        color="0x1E293BEE" 
+      />
+      
+      <!-- The Text -->
+      <Label 
+        id="messageLabel" 
+        width="760" 
+        translation="[130, 60]" 
+        color="0xE2E8F0FF" 
+        font="font:SmallSystemFont" 
+        wrap="true" 
+        maxLines="3"
+        text="Yo! FlowChef Master en la casa."
+      />
+      
+    </Group>
+
+    <!-- Animation for appearing -->
+    <Animation id="showAnim" duration="0.3" easeFunction="linear">
+      <FloatFieldInterpolator fieldToInterp="chatContainer.opacity" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" />
+      <Vector2DFieldInterpolator fieldToInterp="chatContainer.scale" key="[0.0, 1.0]" keyValue="[[0.8, 0.8], [1.0, 1.0]]" />
+    </Animation>
+
+    <!-- Animation for disappearing -->
+    <Animation id="hideAnim" duration="0.3" easeFunction="linear">
+      <FloatFieldInterpolator fieldToInterp="chatContainer.opacity" key="[0.0, 1.0]" keyValue="[1.0, 0.0]" />
+    </Animation>
+  </children>
+</component>

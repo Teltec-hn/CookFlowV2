@@ -7,7 +7,7 @@ sub Main()
     screen = CreateObject("roSGScreen")
     m.port = CreateObject("roMessagePort")
     screen.SetMessagePort(m.port)
-    
+
     ' 2. CARGAR CONFIGURACIÓN
     config = GetConfig()
     if config = invalid then return
@@ -20,8 +20,8 @@ sub Main()
 
     ' 5. LANZAR UI
     scene = screen.CreateScene("MainScene")
-   
     screen.Show()
+    scene.setFocus(true) ' Fundamental para que el FlowChef reciba inputs
 
     ' 6. EVENT LOOP
     while(true)
@@ -34,15 +34,15 @@ sub Main()
 end sub
 
 ' Función Helper para descargar en el Main Thread
-Function FetchRecipesSync(baseUrl as String) as String
+function FetchRecipesSync(baseUrl as string) as string
     url = baseUrl + "/get-recipes?query=pasta"
-    
+
     http = CreateObject("roUrlTransfer")
     http.SetUrl(url)
     http.SetCertificatesFile("common:/certs/ca-bundle.crt")
     http.InitClientCertificates()
-    
+
     response = http.GetToString()
     if response = "" then return "[]" ' Retornar array vacío si falla
     return response
-End Function
+end function

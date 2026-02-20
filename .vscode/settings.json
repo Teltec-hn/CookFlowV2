@@ -1,0 +1,30 @@
+{
+    "deno.enable": true,
+    "deno.unstable": true,
+    "deno.config": "./deno.json",
+    "deno.enablePaths": [
+        "./supabase",
+        "supabase"
+    ],
+    "css.lint.unknownAtRules": "ignore",
+    // --- OPTIMIZACIÓN DE RENDIMIENTO (PYTHON) ---
+    // Evita que la extensión de Python analice todo el proyecto al inicio (8000ms -> <1000ms)
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.indexing": false,
+    "python.analysis.autoImportCompletions": false,
+    "python.analysis.exclude": [
+        "roku-app", // No analizar código BrightScript
+        "web-client", // No analizar código React/Next.js
+        "out", // Ignorar builds
+        "supabase", // Ignorar Edge Functions (Deno)
+        "**/node_modules"
+    ],
+    // --- OPTIMIZACIÓN GENERAL ---
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/out/**": true,
+        "**/node_modules/**": true,
+        "**/components.zip": true,
+        "**/roku-app.zip": true
+    }
+}

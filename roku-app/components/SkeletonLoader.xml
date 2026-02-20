@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="SkeletonLoader" extends="Group">
+
+  <script type="text/brightscript" uri="pkg:/components/SkeletonLoader.brs" />
+  
+  <children>
+    <!-- Base Card: Darker Amber/Brown -->
+    <Rectangle 
+      id="baseRect" 
+      width="320" 
+      height="260" 
+      color="#3E342F" 
+      translation="[0,0]" />
+      
+    <!-- Pulsing Highlight (Overlay): Gold/Orange -->
+    <Rectangle 
+      id="pulseRect" 
+      width="320" 
+      height="260" 
+      color="#CC5500" 
+      opacity="0.1" 
+      translation="[0,0]" />
+
+    <!-- Animation Definition: Heat Pulse -->
+    <Animation id="pulseAnim" duration="1.2" repeat="true" easeFunction="inOutSine">
+      <FloatFieldInterpolator 
+        key="[0.0, 0.5, 1.0]" 
+        keyValue="[0.1, 0.4, 0.1]" 
+        fieldToInterp="pulseRect.opacity" />
+    </Animation>
+    
+  </children>
+</component>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="IntroScene" extends="Group">
+
+  <interface>
+    <field id="countryInfo" type="assocarray" />
+    <field id="state" type="string" value="idle" />
+    <function name="Start" />
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/components/IntroScene.brs" />
+  <script type="text/brightscript" uri="pkg:/source/Theme.brs" />
+  <script type="text/brightscript" uri="pkg:/source/CountryUtils.brs" />
+
+  <children>
+    <!-- Background -->
+    <Rectangle 
+      id="background" 
+      width="1920" 
+      height="1080" 
+      color="#000000" 
+      translation="[0,0]" />
+
+    <!-- FlowChef Rapper Poster -->
+    <Poster 
+      id="rapperCharacter" 
+      uri="pkg:/images/logo.jpg" 
+      width="300" 
+      height="300" 
+      translation="[490, 180]" 
+      opacity="0.0" />
+
+    <!-- Title -->
+    <Label 
+      id="titleLabel" 
+      text="CookFlow TV" 
+      width="800"
+      translation="[240, 500]" 
+      horizAlign="center" 
+      font="font:LargeBoldSystemFont" 
+      color="#E67E22" 
+      opacity="0.0" />
+
+    <!-- Country Flag & Welcome -->
+    <LayoutGroup 
+      id="flagGroup" 
+      translation="[340, 560]" 
+      layoutDirection="horiz" 
+      horizAlignment="center" 
+      itemSpacings="[10]" 
+      opacity="0.0">
+      
+      <Poster 
+        id="flagPoster" 
+        width="40" 
+        height="30" />
+        
+      <Label 
+        id="countryLabel" 
+        text="" 
+        font="font:MediumSystemFont" 
+        color="#F1C40F" />
+    </LayoutGroup>
+
+    <!-- ANIMATIONS (Declarative Approach) -->
+    
+    <!-- 1. Rapper Bounce In -->
+    <Animation id="rapperAnim" duration="1.0" easeFunction="outBounce" repeat="false">
+      <!-- Opacity: 0 -> 1 -->
+      <FloatFieldInterpolator fieldToInterp="rapperCharacter.opacity" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" />
+      <!-- Translation: Start Higher -> Bounce Down -->
+      <Vector2DFieldInterpolator fieldToInterp="rapperCharacter.translation" key="[0.0, 1.0]" keyValue="[ [490, 60], [490, 180] ]" />
+    </Animation>
+
+    <!-- 2. Title Reveal -->
+    <Animation id="titleAnim" duration="0.8" easeFunction="linear" repeat="false">
+      <FloatFieldInterpolator fieldToInterp="titleLabel.opacity" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" />
+    </Animation>
+
+    <!-- 3. Country Info Reveal -->
+    <Animation id="infoAnim" duration="0.8" easeFunction="linear" repeat="false">
+      <FloatFieldInterpolator fieldToInterp="flagGroup.opacity" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" />
+    </Animation>
+
+    <Timer id="sequenceTimer" repeat="true" duration="0.5" />
+    
+  </children>
+</component>

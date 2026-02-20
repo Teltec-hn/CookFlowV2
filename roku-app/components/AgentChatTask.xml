@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="AgentChatTask" extends="Task">
+  <interface>
+    <field id="message" type="string" />
+    <field id="userId" type="string" />
+    <field id="response" type="assocarray" />
+  </interface>
+  <script type="text/brightscript" uri="pkg:/components/AgentChatTask.brs" />
+</component>

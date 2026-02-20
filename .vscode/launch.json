@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "BrightScript Debug: Launch",
+            "type": "brightscript",
+            "request": "launch",
+            "rootDir": "${workspaceFolder}/roku-app",
+            "host": "10.130.43.118",
+            "password": "RB86",
+            "remotePort": 8060,
+            "enableDebugProtocol": true,
+            "rendezvousTracking": false,
+            "consoleOutput": "normal"
+        }
+    ]
+}
