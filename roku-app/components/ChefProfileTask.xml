@@ -22,6 +22,11 @@
         http.InitClientCertificates()
         http.SetPort(m.port)
         
+        ' Anti-Cache Mechanism: Roku Network cache is aggressive
+        cacheBust = CreateObject("roDateTime").AsSeconds().ToStr()
+        finalUrl = url + "?cb=" + cacheBust
+        http.SetUrl(finalUrl)
+        
         ' 🔥 MAGIA: Obliga a Roku a mostrar el error real de Supabase
         http.RetainBodyOnError(true)
         

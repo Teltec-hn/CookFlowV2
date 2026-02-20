@@ -1,128 +1,137 @@
-'use client';
+"use client";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send, Mic } from "lucide-react";
 
-import { useState, useRef, useEffect } from 'react';
+interface Message {
+    id: string;
+    sender: "user" | "agent";
+    text: string;
+    mood?: string;
+    timestamp: string;
+}
 
 export default function ChefChat() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState<{ role: 'user' | 'agent', text: string }[]>([
-        { role: 'agent', text: "Yo! FlowChef here. What's cookin'?" }
+    const [messages, setMessages] = useState<Message[]>([
+        { id: "1", sender: "agent", text: "¡Hey! ¿Qué cocinamos hoy? Tu cocina, a tu ritmo.", timestamp: "12:00", mood: "enthusiastic" }
     ]);
-    const [input, setInput] = useState('');
-    const [isGodMode, setIsGodMode] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [input, setInput] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    useEffect(scrollToBottom, [messages]);
+    useEffect(scrollToBottom, [messages, isTyping]);
 
-    const sendMessage = async () => {
+    const handleSend = async () => {
         if (!input.trim()) return;
 
-        const userMsg = input;
-        setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
-        setInput('');
-        setIsLoading(true);
+        const userMsg: Message = {
+            id: Date.now().toString(),
+            sender: "user",
+            text: input,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessages(prev => [...prev, userMsg]);
+        setInput("");
+        setIsTyping(true);
 
         try {
-            // Call Edge Function
-            const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/chat-agent`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({ message: userMsg, userId: 'mock-user-id' }) // TODO: Real Auth
+            const response = await fetch("/api/v1/agent/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: "viewer_123", // TODO: Replace with real user ID
+                    chef_id: "flowchef_rapper",
+                    message: userMsg.text
+                })
             });
 
-            const data = await res.json();
+            if (!response.ok) throw new Error("Failed to chat with chef");
 
-            if (data.reply) {
-                setMessages(prev => [...prev, { role: 'agent', text: data.reply }]);
-            }
+            const data = await response.json();
 
-            if (data.isGodMode) {
-                setIsGodMode(true);
-            }
+            setMessages(prev => [...prev, {
+                id: (Date.now() + 1).toString(),
+                sender: "agent",
+                text: data.reply,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                mood: data.mood
+            }]);
         } catch (error) {
-            console.error('Chat error:', error);
-            setMessages(prev => [...prev, { role: 'agent', text: "Mic check... 1, 2... something went wrong." }]);
+            console.error("Chat error:", error);
+            setMessages(prev => [...prev, {
+                id: (Date.now() + 1).toString(),
+                sender: "agent",
+                text: "Lo siento, me he quemado con el horno. Inténtalo de nuevo más tarde.",
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                mood: "error"
+            }]);
         } finally {
-            setIsLoading(false);
+            setIsTyping(false);
         }
     };
 
     return (
-        <div className={`fixed bottom-6 right-6 z-50 flex flex-col items-end transition-all ${isGodMode ? 'animate-pulse-gold' : ''}`}>
-
-            {/* Chat Window */}
-            {isOpen && (
-                <div className={`mb-4 w-80 h-96 bg-surface border border-surface rounded-xl shadow-2xl flex flex-col overflow-hidden ${isGodMode ? 'ring-2 ring-mustard' : ''}`}>
-                    {/* Header */}
-                    <div className="bg-charcoal-dark p-3 flex justify-between items-center border-b border-surface">
-                        <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 rounded-full bg-chef-fire flex items-center justify-center text-sm">👨‍🍳</div>
-                            <span className="font-bold text-cream">FlowChef {isGodMode && '👑'}</span>
-                        </div>
-                        <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white">✕</button>
-                    </div>
-
-                    {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-opacity-50 bg-black">
-                        {messages.map((m, i) => (
-                            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] p-2 rounded-lg text-sm ${m.role === 'user'
-                                        ? 'bg-mustard text-charcoal-dark'
-                                        : 'bg-surface text-gray-200 border border-gray-700'
-                                    }`}>
-                                    {m.text}
-                                </div>
-                            </div>
-                        ))}
-                        {isLoading && (
-                            <div className="flex justify-start">
-                                <div className="bg-surface text-gray-400 p-2 rounded-lg text-xs italic animate-pulse">
-                                    Dropping bars...
-                                </div>
-                            </div>
-                        )}
-                        <div ref={messagesEndRef} />
-                    </div>
-
-                    {/* Input */}
-                    <div className="p-3 bg-charcoal-dark border-t border-surface flex">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                            placeholder="Spit some rhymes..."
-                            className="flex-1 bg-surface text-white text-sm rounded-l-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-mustard"
-                        />
-                        <button
-                            onClick={sendMessage}
-                            disabled={isLoading}
-                            className="bg-chef-fire text-white px-3 py-2 rounded-r-md text-sm hover:bg-orange-600 disabled:opacity-50"
+        <div className="flex flex-col h-full bg-neutral-900 font-sans text-sm">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <AnimatePresence>
+                    {messages.map((msg) => (
+                        <motion.div
+                            key={msg.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                         >
-                            🎤
-                        </button>
-                    </div>
-                </div>
-            )}
+                            <div
+                                className={`max-w-[80%] px-4 py-2 rounded-lg shadow-md ${msg.sender === "user"
+                                    ? "bg-amber-600 text-white rounded-br-none"
+                                    : "bg-neutral-800 text-amber-100 rounded-bl-none border border-neutral-700"
+                                    }`}
+                            >
+                                <p>{msg.text}</p>
+                                <span className="text-[10px] opacity-50 block text-right mt-1">{msg.timestamp}</span>
+                            </div>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+                {isTyping && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex justify-start"
+                    >
+                        <div className="bg-neutral-800 text-amber-100 rounded-lg rounded-bl-none border border-neutral-700 px-4 py-2 opacity-70">
+                            <span className="animate-pulse">...</span>
+                        </div>
+                    </motion.div>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
 
-            {/* Toggle Button */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 ${isGodMode
-                        ? 'bg-gradient-to-r from-mustard to-chef-fire ring-4 ring-yellow-500/30'
-                        : 'bg-chef-fire hover:bg-orange-600'
-                    }`}
-            >
-                <span className="text-2xl">👨‍🍳</span>
-            </button>
-
+            <div className="p-3 bg-neutral-950 border-t border-neutral-800 flex items-center gap-2">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                    placeholder="Escribe tu mensaje..."
+                    className="flex-1 bg-neutral-900 border border-neutral-800 rounded-full px-4 py-2 text-neutral-200 focus:outline-none focus:border-amber-700 transition-colors"
+                />
+                <button className="p-2 text-neutral-400 hover:text-amber-500 transition-colors">
+                    <Mic size={20} />
+                </button>
+                <button
+                    onClick={handleSend}
+                    className="p-2 bg-amber-600 hover:bg-amber-700 text-white rounded-full shadow-lg transition-transform active:scale-95"
+                >
+                    <Send size={18} />
+                </button>
+            </div>
         </div>
     );
 }

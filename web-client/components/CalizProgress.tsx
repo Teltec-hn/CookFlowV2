@@ -1,38 +1,74 @@
-import React from 'react';
+"use client";
+import { motion } from "framer-motion";
 
-interface GoalProps {
-    currentAmount: number;
+interface CalizProgressProps {
     targetAmount: number;
-    title: string;
+    currentAmount: number;
+    percentage: number;
 }
 
-const CalizProgress = ({ currentAmount, targetAmount, title }: GoalProps) => {
-    const percentage = Math.min(100, Math.max(0, (currentAmount / targetAmount) * 100));
+export default function CalizProgress({
+    targetAmount,
+    currentAmount,
+    percentage,
+}: CalizProgressProps) {
+    // Clamp percentage between 0 and 100
+    const fillHeight = Math.min(Math.max(percentage, 0), 100);
 
     return (
-        <div className="flex flex-col items-center p-4 bg-gray-900 rounded-lg border border-amber-900/30">
-            <h4 className="text-amber-400 font-serif mb-2">{title}</h4>
-
-            {/* The Cáliz Container */}
-            <div className="relative w-16 h-24 border-2 border-amber-600 rounded-b-2xl rounded-t-sm overflow-hidden bg-gray-800">
-                {/* Liquid Fill */}
-                <div
-                    className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-amber-600 to-yellow-400 transition-all duration-1000 ease-in-out"
-                    style={{ height: `${percentage}%` }}
+        <div className="flex flex-col items-center justify-center py-4">
+            <div className="relative w-48 h-64">
+                {/* Fondo del Cáliz (SVG) */}
+                <svg
+                    viewBox="0 0 100 150"
+                    className="absolute inset-0 w-full h-full text-neutral-800 drop-shadow-xl"
                 >
-                    {/* Bubble Emitter (CSS only implementation for simplicity) */}
-                    <div className="w-full h-full opacity-50 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8Y2lyY2xlIGN4PSIyIiBjeT0iMiIgcj0iMSIgZmlsbD0id2hpdGUiIC8+Cjwvc3ZnPg==')] animate-pulse"></div>
+                    <path
+                        d="M10,10 Q50,150 90,10"
+                        fill="currentColor"
+                        stroke="#451a03"
+                        strokeWidth="2"
+                    />
+                </svg>
+
+                {/* Líquido (Animado) */}
+                <div className="absolute inset-0 w-full h-full overflow-hidden flex items-end justify-center pb-2 [mask-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTUwIj48cGF0aCBkPSJNMTAsMTAgUTUwLDE1MCA5MCwxMCIgZmlsbD0iYmxhY2siLz48L3N2Zz4=')] [mask-size:contain] [mask-repeat:no-repeat] [mask-position:center]">
+                    <motion.div
+                        initial={{ height: "0%" }}
+                        animate={{ height: `${fillHeight}%` }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="w-full bg-gradient-to-t from-amber-600 via-yellow-500 to-yellow-300 opacity-90 relative"
+                    >
+                        {/* Burbujas */}
+                        <motion.div
+                            animate={{ y: [0, -100] }}
+                            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                            className="absolute bottom-0 left-1/4 w-2 h-2 bg-white/50 rounded-full"
+                        />
+                        <motion.div
+                            animate={{ y: [0, -120] }}
+                            transition={{ repeat: Infinity, duration: 3, ease: "linear", delay: 1 }}
+                            className="absolute bottom-0 right-1/3 w-3 h-3 bg-white/30 rounded-full"
+                        />
+                    </motion.div>
                 </div>
 
-                {/* Reflection/Glass Effect */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"></div>
+                {/* Overlay de Brillo */}
+                <div className="absolute inset-0 w-full h-full pointer-events-none bg-gradient-to-tr from-transparent to-white/10 rounded-full opacity-50" />
             </div>
 
-            <div className="mt-2 text-xs text-amber-200">
-                ${currentAmount} / ${targetAmount}
+            {/* Info */}
+            <div className="mt-6 text-center">
+                <p className="text-3xl font-bold text-amber-500 tabular-nums">
+                    ${currentAmount.toFixed(2)}
+                </p>
+                <p className="text-xs text-neutral-400 uppercase tracking-widest mt-1">
+                    Meta: ${targetAmount.toFixed(2)}
+                </p>
+                <div className="mt-2 text-xs font-mono text-yellow-600">
+                    {percentage.toFixed(1)}% COMPLETADO
+                </div>
             </div>
         </div>
     );
-};
-
-export default CalizProgress;
+}

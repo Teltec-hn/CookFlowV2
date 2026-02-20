@@ -5,39 +5,36 @@ from pydantic import BaseModel
 router = APIRouter()
 
 # --- Models ---
-class ChefProfile(BaseModel):
-    id: str
-    name: str
-    rank: str # Plomo, Cobre, Oro
-    specialties: List[str]
-    bio: Optional[str] = None
-    avatar_url: Optional[str] = None
+class ActiveGoal(BaseModel):
+    targetAmount: int
+    currentAmount: int
+    percentage: int
 
-class ChefUpdate(BaseModel):
-    bio: Optional[str] = None
-    avatar_url: Optional[str] = None
-    tags: Optional[List[str]] = None
+class ExtendedChefProfile(BaseModel):
+    profile: dict
+    activeGoal: ActiveGoal
+    awards: List[str]
 
-class ChefStats(BaseModel):
-    views: int
-    income: float
-    subscribers: int
-
-# --- Routes ---
-
-@router.get("/{chef_id}", response_model=ChefProfile)
+@router.get("/{chef_id}", response_model=ExtendedChefProfile)
 async def get_chef_profile(chef_id: str):
     """
-    Descarga el perfil público, rango actual (Plomo, Cobre, Oro) y especialidades.
+    Descarga el perfil completo para Roku, incluyendo el estado del Cáliz y permios.
     """
-    # TODO: Fetch from database
+    # TODO: Fetch real data from database
     return {
-        "id": chef_id,
-        "name": "FlowChef Master", 
-        "rank": "Oro",
-        "specialties": ["Hip-Hop Cuisine", "Molecular Gastronomy"],
-        "bio": "Cocinando beats y platos.",
-        "avatar_url": "https://example.com/avatar.jpg"
+        "profile": {
+            "id": chef_id,
+            "name": "FlowChef Master",
+            "rank": "Oro",
+            "specialties": ["Hip-Hop Cuisine"],
+            "bio": "Cocinando beats y platos."
+        },
+        "activeGoal": {
+            "targetAmount": 500,
+            "currentAmount": 250, 
+            "percentage": 50 
+        },
+        "awards": ["primera_sangre", "maestro_del_fuego"]
     }
 
 @router.put("/{chef_id}", response_model=ChefProfile)

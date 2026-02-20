@@ -13,7 +13,7 @@
     <Rectangle id="mainBackground" width="1920" height="1080" color="#101010" />
 
     <!-- UI Container -->
-    <Group id="mainUI" visible="false">
+    <Group id="mainUI" visible="false" opacity="1.0">
         
         <!-- Header / Top Bar -->
         <Label text="CookFlow TV" translation="[100, 50]" font="font:LargeBoldSystemFont" color="#E67E22" />
@@ -32,6 +32,7 @@
             rowItemSpacing="[[20, 0]]"
             showRowLabel="true"
             rowLabelColor="#F5E6CA"
+            itemComponentName="StandardGridItem"
         />
         
         <!-- The Cáliz (Bottom Left or Sidebar) -->
@@ -43,5 +44,28 @@
 
     <!-- Intro Animation Overlay -->
     <IntroScene id="introScene" />
+
+    <!-- Recipe Detail Overlay -->
+    <RecipeDetailScene id="recipeDetail" visible="false" opacity="0.0" />
+
+    <!-- Animations for UI Fade in/out -->
+    <Animation id="fadeDetailAnimIn" duration="0.4" easeFunction="linear">
+        <FloatFieldInterpolator key="[0.0, 1.0]" keyValue="[0.0, 1.0]" fieldToInterp="recipeDetail.opacity" />
+    </Animation>
+    
+    <Animation id="fadeDetailAnimOut" duration="0.3" easeFunction="linear">
+        <FloatFieldInterpolator key="[0.0, 1.0]" keyValue="[1.0, 0.0]" fieldToInterp="recipeDetail.opacity" />
+    </Animation>
+
+    <Animation id="fadeOutMainUIAnim" duration="0.3" easeFunction="linear">
+        <FloatFieldInterpolator key="[0.0, 1.0]" keyValue="[1.0, 0.0]" fieldToInterp="mainUI.opacity" />
+    </Animation>
+    
+    <Animation id="fadeInMainUIAnim" duration="0.4" easeFunction="linear">
+        <FloatFieldInterpolator key="[0.0, 1.0]" keyValue="[0.0, 1.0]" fieldToInterp="mainUI.opacity" />
+    </Animation>
+
+    <!-- Polling Timer for Real-Time Cáliz Updates -->
+    <Timer id="pollingTimer" repeat="true" duration="15" />
   </children>
 </component>

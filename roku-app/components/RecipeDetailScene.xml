@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="RecipeDetailScene" extends="Group">
+  <script type="text/brightscript" uri="pkg:/components/RecipeDetailScene.brs" />
+  
+  <interface>
+    <field id="content" type="node" onChange="onContentChange" />
+    <field id="closeEvent" type="boolean" value="false" alwaysNotify="true" />
+  </interface>
+
+  <children>
+    <!-- Background superpuesto con opacidad para resaltar el detalle -->
+    <Rectangle id="background" width="1920" height="1080" color="#0B0B0B" opacity="0.95" />
+    
+    <Group id="contentGroup" translation="[160, 140]">
+        <!-- Imagen Hero de la Receta -->
+        <Poster id="recipeImage" width="700" height="800" loadDisplayMode="scaleToFill" />
+        
+        <!-- Área de Detalles de la Receta -->
+        <Group translation="[800, 50]">
+            <Label id="recipeTitle" font="font:LargeBoldSystemFont" color="#F5E6CA" wrap="true" width="750" />
+            
+            <Label id="recipeMetadata" translation="[0, 80]" font="font:MediumSystemFont" color="#E67E22" />
+            
+            <Label id="recipeDescription" translation="[0, 140]" font="font:MediumSystemFont" color="#CCCCCC" wrap="true" width="750" numLines="5" />
+            
+            <!-- Pasos o Preparación -->
+            <Label text="EL TOQUE DEL CHEF" translation="[0, 320]" font="font:SmallBoldSystemFont" color="#E67E22" />
+            
+            <Label text="1. Prepara los ingredientes con estilo y ritmo." translation="[0, 380]" font="font:MediumSystemFont" color="#FFFFFF" />
+            <Label text="2. Mantén el fuego exacto para la cocción perfecta." translation="[0, 430]" font="font:MediumSystemFont" color="#FFFFFF" />
+            <Label text="3. Sírvelo visualizando tu contribución al Cáliz." translation="[0, 480]" font="font:MediumSystemFont" color="#FFFFFF" />
+
+            <!-- Hint Button -->
+            <Label text="[ ATRÁS o OK ] para regresar" translation="[0, 680]" font="font:SmallSystemFont" color="#888888" />
+        </Group>
+    </Group>
+  </children>
+</component>

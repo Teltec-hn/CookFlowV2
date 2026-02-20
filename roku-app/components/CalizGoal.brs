@@ -1,20 +1,21 @@
 sub init()
-    m.fillTexture = m.top.findNode("fillTexture")
-    ' Base position is [0, 150] (Empty, pushed down)
-    ' Full position is [0, 0] (Full)
-    m.maxOffset = 150
+    m.fillRect = m.top.findNode("fillRect")
+    m.maxHeight = 150
 end sub
 
 sub onProgressChanged()
     percent = m.top.progress
+    if percent = invalid then percent = 0.0
     if percent > 1.0 then percent = 1.0
     if percent < 0.0 then percent = 0.0
-    
-    ' Calculate new Y position
-    ' 0% -> 150
-    ' 100% -> 0
-    newY = m.maxOffset * (1.0 - percent)
-    
-    ' Animate smooth transition? For V1 direct set
-    m.fillTexture.translation = [0, newY]
+
+    ' Grows from bottom up: Y moves up as height grows
+    ' 0%  -> height=0,   Y=150  (empty)
+    ' 55% -> height=82,  Y=68   (half full)
+    ' 100%-> height=150, Y=0    (full)
+    if m.fillRect <> invalid
+        newHeight = Int(m.maxHeight * percent)
+        m.fillRect.height = newHeight
+        m.fillRect.translation = [0, m.maxHeight - newHeight]
+    end if
 end sub

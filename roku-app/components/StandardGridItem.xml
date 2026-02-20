@@ -2,13 +2,19 @@
 <component name="StandardGridItem" extends="Group">
   <interface>
     <field id="itemContent" type="node" onChange="showContent" />
+    <field id="focusPercent" type="float" onChange="showFocus" />
   </interface>
 
   <script type="text/brightscript" uri="pkg:/components/StandardGridItem.brs" />
 
   <children>
-    <Rectangle width="320" height="260" color="0x1E293BFF" /> 
-    <Poster id="poster" width="320" height="180" loadDisplayMode="scaleToFill" />
-    <Label id="title" width="300" height="60" translation="[10, 190]" font="font:SmallSystemFont" horizAlign="center" color="0xFFFFFFFF" />
+    <Group id="itemContainer">
+      <Rectangle id="focusRing" width="328" height="248" translation="[-4, -4]" color="#E67E22" opacity="0.0" />
+
+      <Poster id="poster" width="320" height="240" loadDisplayMode="scaleToZoom" />
+      <Rectangle id="infoBackground" width="320" height="70" translation="[0, 170]" color="0x000000D9" />
+      <Label id="titleLabel" width="300" translation="[10, 175]" font="font:SmallBoldSystemFont" color="#FFFFFF" wrap="false" />
+      <Label id="metaLabel" width="300" translation="[10, 205]" font="font:MicroSystemFont" color="#F1C40F" />
+    </Group>
   </children>
 </component>

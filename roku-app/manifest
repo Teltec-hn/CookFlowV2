@@ -2,10 +2,10 @@ title=CookFlow V2.1 - Chef DNA
 major_version=2
 minor_version=1
 build_version=0
-
+ui_resolutions=fhd
 # === NETWORK CONFIG (V2.1 Strategy) ===
 # Esta IP la inyectará automáticamente tu setup_network.ps1
-api_dev_ip=172.19.13.107 
+api_dev_ip=10.130.43.107
 # URL de producción de tu futura Edge Function
 api_prod_url=https://hcfhvgkucaimchfxbtub.supabase.co/functions/v1/cookflow-proxy
 

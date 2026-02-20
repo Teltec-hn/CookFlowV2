@@ -1,18 +1,29 @@
 sub init()
-    ' Guardamos las referencias a los nodos visuales
+    m.itemContainer = m.top.findNode("itemContainer")
     m.poster = m.top.findNode("poster")
-    m.title = m.top.findNode("title")
+    m.titleLabel = m.top.findNode("titleLabel")
+    m.metaLabel = m.top.findNode("metaLabel")
+    m.focusRing = m.top.findNode("focusRing")
 end sub
 
-' Esta función se activa SOLA cuando el RowList le da una receta a la tarjeta
 sub showContent()
-    itemData = m.top.itemContent
-    
-    if itemData <> invalid
-        ' hdPosterUrl es la URL de la imagen que viene de Supabase
-        m.poster.uri = itemData.hdPosterUrl
-        m.title.text = itemData.title
-        
-        print "VP LOG: [Tarjeta] Pintando: " + itemData.title
+    item = m.top.itemContent
+    if item <> invalid
+        m.poster.uri = item.hdPosterUrl
+        m.titleLabel.text = item.title
+
+        ' Roku usa el campo "description" del ContentNode para datos extra
+        if item.description <> invalid and item.description <> ""
+            m.metaLabel.text = item.description
+        else
+            m.metaLabel.text = "⏱️ Cocina a tu ritmo" ' Fallback por si no hay datos
+        end if
     end if
+end sub
+
+sub showFocus()
+    ' Animación de 0.0 a 1.0 basada en el movimiento del control remoto
+    scale = 1.0 + (m.top.focusPercent * 0.05) ' Hace un zoom del 5%
+    m.itemContainer.scale = [scale, scale]
+    m.focusRing.opacity = m.top.focusPercent
 end sub

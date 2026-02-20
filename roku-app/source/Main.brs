@@ -14,7 +14,7 @@ sub Main()
 
     ' 3. INYECTAR CONTEXTO GLOBAL
     m.global = screen.GetGlobalNode()
-    m.global.addField("appConfig", "roAssociativeArray", false)
+    m.global.addField("appConfig", "assocarray", false)
     m.global.appConfig = config
 
 

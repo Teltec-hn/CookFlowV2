@@ -32,14 +32,27 @@ else {
 
 Write-Host "[INFO] Detected Windows LAN IP: $HostIP" -ForegroundColor Green
 
-# 2. Update .env for Docker (The "Smart DNS" Link)
-$EnvPath = "C:\Client\CookFlow\.env"
-$EnvContent = "WINDOWS_HOST_IP=$HostIP"
-Set-Content -Path $EnvPath -Value $EnvContent
-Write-Host "[SUCCESS] Updated .env file with WINDOWS_HOST_IP=$HostIP" -ForegroundColor Green
+# 2. Update .env for Backend (The "Smart DNS" Link)
+$EnvPath = "$PSScriptRoot\.env"
+Set-Content -Path $EnvPath -Value "WINDOWS_HOST_IP=$HostIP"
+Write-Host "[SUCCESS] Updated backend .env: WINDOWS_HOST_IP=$HostIP" -ForegroundColor Green
 
-# 3. Update Roku Manifest (Surgical Replace)
-$ManifestPath = "C:\Client\CookFlow\cookflow_roku\manifest"
+# 3. Update web-client .env.local (For Next.js Proxy)
+$WebEnvPath = "$PSScriptRoot\web-client\.env.local"
+# Ensure we don't wipe existing keys, just append/update the host IP
+if (Test-Path $WebEnvPath) {
+    $webContent = Get-Content $WebEnvPath
+    # Remove old entry if exists (simple approach) and append new one
+    $webContent = $webContent | Where-Object { $_ -notmatch "^NEXT_PUBLIC_API_HOST=" }
+    $webContent += "NEXT_PUBLIC_API_HOST=http://$HostIP:8000"
+    $webContent | Set-Content $WebEnvPath
+} else {
+    Set-Content -Path $WebEnvPath -Value "NEXT_PUBLIC_API_HOST=http://$HostIP:8000"
+}
+Write-Host "[SUCCESS] Updated web-client .env.local: NEXT_PUBLIC_API_HOST=http://$HostIP:8000" -ForegroundColor Green
+
+# 4. Update Roku Manifest (Surgical Replace)
+$ManifestPath = "$PSScriptRoot\roku-app\manifest"
 if (Test-Path $ManifestPath) {
     # Read content
     $content = Get-Content $ManifestPath

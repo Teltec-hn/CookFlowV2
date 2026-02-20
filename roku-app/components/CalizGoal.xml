@@ -16,20 +16,14 @@
       translation="[0,0]" 
     />
     
-    <!-- Fill Mask (The Gold Liquid) -->
-    <!-- We simulate a radial fill by masking or scaling a rectangle inside a group -->
-    <!-- Roku SceneGraph specific technique: Using a Poster as a mask isn't straightforward for radial. 
-         For simplicity in V1: We will use a vertical fill (bottom-up) which looks like a cup filling. -->
-    <Group id="fillGroup" translation="[0,0]">
-        <!-- The Gold Texture -->
-        <Poster 
-          id="fillTexture" 
-          uri="pkg:/images/caliz_fill.png" 
-          width="150" 
-          height="150" 
-          translation="[0, 150]" 
-        />
-    </Group>
+    <!-- Fill Rectangle (Liquid Gold) - grows from bottom up, no clipRect needed -->
+    <Rectangle
+      id="fillRect"
+      width="150"
+      height="0"
+      color="#D4AC0D"
+      translation="[0, 150]"
+    />
 
     <!-- Overlay (The Glass Reflection/Shine) -->
     <Poster 
